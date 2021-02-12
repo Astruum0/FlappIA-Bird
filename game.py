@@ -65,10 +65,12 @@ class game:
                 if self.list_pipes[-1].rect.x <= (2*self.w)//5: # Si le dernier Pipe a passé l'oiseau 
                     self.list_pipes.append(Pipe()) # On créé un nouveau Pipe qui sera généré tout à droite
                     self.all_sprites_list.add(self.list_pipes[-1])
+                    
                 if self.list_pipes[0].rect.x <= -self.list_pipes[0].w: # Si le Pipe sort de l'écran
+                    self.all_sprites_list.remove(self.list_pipes[0])
                     self.list_pipes.pop(0) # Supprime le Pipe de la liste
                     
-                    self.all_sprites_list.remove(self.list_pipes[0])
+                    
                     
                 for pipe in self.list_pipes: # Itère dans la liste de tous les Pipes
                     pipe.update() # Met à jour la position X des Pipes en utilsant leur méthode correspondante
