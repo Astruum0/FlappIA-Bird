@@ -136,11 +136,19 @@ class game:
                 for pipe in self.list_pipes:
                     if pipe.rect.x <= bird.rect.x and pipe.rect.x >= bird.rect.x + self.ground.xspeed:
                         bird.score += 1
+                        
                 ge[x].fitness += 0.01
-                output = nets[x].activate((bird.rect.y, abs(bird.rect.y - (self.list_pipes[pipe_ind].y + 100)), abs(bird.rect.y - (self.list_pipes[pipe_ind].y - 100))))
                 
-                if output[0] > 0.5:
-                    bird.jump()
+                # ici output est la valeur retournée par les gènes
+                output = nets[x].activate(
+                    (bird.rect.y, # Hauteur de l'oiseau
+                     abs(bird.rect.y - (self.list_pipes[pipe_ind].y + 100)), 
+                     abs(bird.rect.y - (self.list_pipes[pipe_ind].y - 100)))
+                    ) # ^ Differences de hauteur avec le Pipe du Haut et du Bas
+                
+                # Si la valeur est supérieure à 0.5
+                if output[0] > 0.5: 
+                    bird.jump() # L'oiseau saute
                             
 
             self.ground.update()
@@ -155,16 +163,18 @@ class game:
                 self.list_pipes.pop(0)
             for pipe in self.list_pipes:
                 pipe.update()
-                for i, bird in enumerate(birds):
-                    if bird.collide(pipe):
-                        ge[i].fitness -= 1
-                        birds.pop(i)
+                for i, bird in enumerate(birds): # pour tous les oiseaux encore vivants
+                    if bird.collide(pipe): # Si l'oiseau percute un Pipe
+                        ge[i].fitness -= 1 # Décrémente de 1 sa fitness
+                        birds.pop(i) # Retire l'oiseau des oiseaux restants
+                        
                         nets.pop(i)
                         ge.pop(i)
                         
+                    # Si les oiseaux encore vivants passent un Pipe
                     if pipe.rect.x <= bird.rect.x and pipe.rect.x >= bird.rect.x + self.ground.xspeed:
                         for g in ge:
-                            g.fitness += 5
+                            g.fitness += 5 # Augmente de 5 les fitness de tous les oiseaux encore vivants
 
             
             if self.game:        
